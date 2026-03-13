@@ -32,6 +32,13 @@ const Footer = () => {
       { name: 'Help Center', href: '#contact' },
       { name: 'Apps', href: '#download' },
     ],
+    Legal: [
+      { name: 'Terms and conditions', href: '#' },
+      { name: 'Privacy policy', href: '#' },
+      { name: 'Cookie policy', href: '#' },
+      { name: 'Disclaimer', href: '#' },
+      { name: 'Data privacy and encryption', href: '#' },
+    ],
   }
 
   return (
@@ -64,40 +71,117 @@ const Footer = () => {
           </motion.div>
         </motion.div>
 
-        {/* Navigation Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
-          {Object.entries(footerLinks).map(([title, links], colIndex) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: colIndex * 0.1 }}
-              className="flex flex-col gap-4 text-center sm:text-left"
-            >
-              <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide mb-2">
-                {title}
-              </h3>
-              <ul className="flex flex-col gap-3 list-none">
-                {links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
-                    <motion.a
-                      href={link.href}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        scrollToSection(link.href.replace('#', ''))
-                      }}
-                      className="text-sm text-white/70 hover:text-white transition-colors duration-200 inline-block relative group"
-                      whileHover={{ x: 5 }}
-                    >
-                      {link.name}
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-blue group-hover:w-full transition-all duration-300"></span>
-                    </motion.a>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
+        {/* Navigation Columns + Download section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 gap-10 xl:gap-14 mb-12 sm:mb-16">
+          {/* Left: Product / Company / Support / Legal links */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 md:col-span-4 xl:col-span-3 gap-6 sm:gap-10">
+            {(['Product', 'Company', 'Support', 'Legal'] as const).map((key, colIndex) => (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: colIndex * 0.1 }}
+                className="flex flex-col gap-3 text-left"
+              >
+                <h3 className="text-sm font-semibold text-white/90 tracking-wide mb-1">
+                  {key}
+                </h3>
+                <ul className="flex flex-col gap-3 list-none">
+                  {footerLinks[key].map((link, linkIndex) => (
+                    <li key={linkIndex}>
+                      <motion.a
+                        href={link.href}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          scrollToSection(link.href.replace('#', ''))
+                        }}
+                        className={`text-sm text-white/70 hover:text-white transition-colors duration-200 inline-block relative group ${
+                          key === 'Legal' ? 'break-words' : ''
+                        }`}
+                        whileHover={{ x: 5 }}
+                      >
+                        {link.name}
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-blue group-hover:w-full transition-all duration-300"></span>
+                      </motion.a>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Right: Download the app section
+              - On mobile & tablets: full width, centered under columns
+              - On wide screens (xl): shifted to the right side */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="md:col-span-4 xl:col-span-2 flex flex-col items-center gap-4 text-center xl:ml-auto"
+          >
+            <h3 className="text-sm font-semibold text-white/90 uppercase tracking-wide">
+              Download the app
+            </h3>
+            <p className="text-sm text-white/70 max-w-md">
+              Get IU Chat on your phone and stay connected with simple, secure and
+              reliable messaging.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 mt-2 w-full sm:w-auto justify-center">
+              {/* Play Store */}
+              <a
+                href="#download"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection('download')
+                }}
+                className="inline-flex items-center rounded-xl border border-white/20 bg-slate-900 px-4 py-2.5 text-left shadow-lg shadow-black/40 hover:bg-slate-800 transition-colors"
+              >
+                <img
+                  src="https://www.vectorlogo.zone/logos/google_play/google_play-icon.svg"
+                  alt="Google Play icon"
+                  className="w-6 h-6 mr-3"
+                  loading="lazy"
+                />
+                <div className="flex flex-col">
+                  <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                    Get it on
+                  </div>
+                  <div className="text-sm sm:text-base font-semibold text-white leading-tight">
+                    Play Store
+                  </div>
+                </div>
+              </a>
+
+              {/* App Store */}
+              <a
+                href="#download"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection('download')
+                }}
+                className="inline-flex items-center rounded-xl border border-white/20 bg-slate-900 px-4 py-2.5 text-left shadow-lg shadow-black/40 hover:bg-slate-800 transition-colors"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5 text-white mr-3"
+                  viewBox="0 0 384 512"
+                  fill="currentColor"
+                >
+                  <path d="M318.7 268.7c-.3-36.7 16.4-64.4 50-84.8-18.8-27.3-47.2-42.3-84.7-45-35.5-2.6-74.3 20.7-88.5 20.7-15 0-49.3-19.7-76.4-19.7C63.3 140.5 16 184.3 16 259.3c0 26.3 4.8 53.5 14.5 81.6 12.9 36.7 59.3 126.4 108.1 124.8 25.4-.6 43.2-18.1 76.1-18.1 32.2 0 49 18.1 76.4 18.1 49.1-.7 90.5-82.5 102.9-119.3-65.2-30.8-75.3-90.3-75.3-97.7zM260.9 92.7c27.4-32.3 24.9-61.7 24-72.7-23.6 1.4-51 15.9-66.8 33.7-17.5 19.7-27.8 44.3-25.6 71.9 25.5 2 48.9-11.2 68.4-32.9z" />
+                </svg>
+                <div className="flex flex-col">
+                  <div className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+                    Get it on
+                  </div>
+                  <div className="text-sm sm:text-base font-semibold text-white leading-tight">
+                    App Store
+                  </div>
+                </div>
+              </a>
+            </div>
+          </motion.div>
         </div>
 
         {/* Bottom Section */}
@@ -106,15 +190,13 @@ const Footer = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-8 sm:pt-12 border-t border-white/10"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-8 sm:pt-12 border-t border-white/10 text-sm text-white/60 text-center sm:text-left"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-white/60 text-center sm:text-left">
+          {/* Bottom row: copyright + sitemap + socials */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <span>© 2026 IU Chat LLC</span>
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
-              <a href="#" className="hover:text-white transition-colors duration-200">
-                Terms &amp; Privacy Policy
-              </a>
-              <span className="text-white/40 hidden sm:inline">|</span>
               <a href="#" className="hover:text-white transition-colors duration-200">
                 Sitemap
               </a>
@@ -142,6 +224,7 @@ const Footer = () => {
                 </svg>
               </motion.a>
             ))}
+            </div>
           </div>
         </motion.div>
       </div>

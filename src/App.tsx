@@ -6,6 +6,7 @@ import AppPreview from './components/AppPreview'
 import Security from './components/Security'
 import Download from './components/Download'
 import Footer from './components/Footer'
+import CookieConsent from './components/CookieConsent'
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
@@ -27,6 +28,7 @@ function App() {
       <Security />
       <Download />
       <Footer />
+      <CookieConsent />
     </div>
   )
 }

@@ -41,7 +41,7 @@ const Navbar = ({ scrolled }: NavbarProps) => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-white/20 transition-all duration-500
+      className={`fixed top-0 left-0 right-0 z-40 border-b border-white/20 transition-all duration-500
         bg-gradient-to-r from-white/80 via-white/70 to-white/80 backdrop-blur-xl
         ${
           scrolled
@@ -119,92 +119,80 @@ const Navbar = ({ scrolled }: NavbarProps) => {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay / Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <>
-            {/* Dark Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-
-            {/* Slide-in Menu Drawer */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-              className="fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-50 lg:hidden flex flex-col"
-            >
-              {/* Menu Header */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-                <span className="text-xl font-display font-bold text-primary-blue">
-                  IU Chat
-                </span>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  aria-label="Close menu"
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="fixed top-0 left-0 w-full h-screen bg-white z-[9999] flex flex-col lg:hidden"
+          >
+            {/* Menu Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+              <span className="text-xl font-display font-bold text-primary-blue">
+                IU Chat
+              </span>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Close menu"
+              >
+                <svg
+                  className="w-6 h-6 text-text-dark"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-6 h-6 text-text-dark"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Items */}
+            <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col">
+              <nav className="flex flex-col gap-5">
+                {navLinks.map((link, index) => (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      scrollToSection(link.href.replace('#', ''))
+                    }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.08 }}
+                    className="text-text-dark font-semibold text-lg py-2 border-b border-gray-100 last:border-b-0"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
+                    {link.name}
+                  </motion.a>
+                ))}
+              </nav>
 
-              {/* Menu Items */}
-              <div className="flex-1 overflow-y-auto px-6 py-6">
-                <nav className="flex flex-col gap-2">
-                  {navLinks.map((link, index) => (
-                    <motion.a
-                      key={link.name}
-                      href={link.href}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        scrollToSection(link.href.replace('#', ''))
-                      }}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="text-text-dark font-medium text-lg py-4 px-4 rounded-xl hover:bg-gray-50 hover:text-primary-blue transition-all duration-200 border-b border-gray-100 last:border-b-0"
-                    >
-                      {link.name}
-                    </motion.a>
-                  ))}
-                </nav>
-
-                {/* Download Button */}
-                <motion.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: navLinks.length * 0.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-8 w-full bg-gradient-to-r from-primary-blue to-purple text-white px-6 py-4 rounded-xl font-semibold text-base shadow-glow hover:shadow-glow-lg transition-all duration-300"
-                  onClick={() => {
-                    scrollToSection('download')
-                    setMobileMenuOpen(false)
-                  }}
-                >
-                  Download App
-                </motion.button>
-              </div>
-            </motion.div>
-          </>
+              {/* Download Button */}
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navLinks.length * 0.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-8 w-full bg-gradient-to-r from-primary-blue to-purple text-white px-6 py-4 rounded-xl font-semibold text-base shadow-glow hover:shadow-glow-lg transition-all duration-300"
+                onClick={() => {
+                  scrollToSection('download')
+                  setMobileMenuOpen(false)
+                }}
+              >
+                Download App
+              </motion.button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </motion.nav>

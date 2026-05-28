@@ -1,37 +1,45 @@
-import { useState, useEffect } from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import Features from './components/Features'
-import AppPreview from './components/AppPreview'
-import Security from './components/Security'
-import Download from './components/Download'
-import Footer from './components/Footer'
-import CookieConsent from './components/CookieConsent'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import Landing from './pages/Landing';
+import { AuthProvider } from './superadmin/context/AuthContext';
+import { ThemeProvider } from './superadmin/context/ThemeContext';
+import SuperAdminRoutes from './superadmin/routes/SuperAdminRoutes';
 
-function App() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
+/**
+ * Top-level app shell:
+ *   /                    → public landing page (untouched)
+ *   /admin/*             → Super Admin Portal (canonical, handled in SuperAdminRoutes)
+ *   /super-admin/*       → backwards-compat redirect to /admin
+ *   any other            → redirect to landing
+ */
+export default function App() {
   return (
-    <div className="App">
-      <Navbar scrolled={scrolled} />
-      <Hero />
-      <Features />
-      <AppPreview />
-      <Security />
-      <Download />
-      <Footer />
-      <CookieConsent />
-    </div>
-  )
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                borderRadius: '10px',
+                background: '#0F172A',
+                color: '#fff',
+                fontSize: '14px',
+              },
+              success: { iconTheme: { primary: '#10B981', secondary: '#fff' } },
+              error: { iconTheme: { primary: '#EF4444', secondary: '#fff' } },
+            }}
+          />
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/admin/*" element={<SuperAdminRoutes />} />
+            <Route path="/super-admin" element={<Navigate to="/admin" replace />} />
+            <Route path="/super-admin/*" element={<Navigate to="/admin" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
 }
-
-export default App
-
